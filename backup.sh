@@ -1,5 +1,5 @@
-REMOTE_USER= x
-REMOTE_IP = x
+REMOTE_USER = iker
+REMOTE_IP = 192.168.1.175
 REMOTE_DIR=$REMOTE_FOLDER
 DATE=$(date +%Y-%m-%d-%H%M%S)
 BACKUP_NAME=$BACKUP_DIR/$DATE.tar.gz
@@ -33,6 +33,8 @@ fi
 ssh-copy-id -i "$HOME/.ssh/id_rsa" $REMOTE_USER@$REMOTE_IP
 
 ssh $REMOTE_USER@$REMOTE_IP "mkdir -p $REMOTE_DIR"
+
+exit
 
 (crontab -l ; echo "*/$FRECUENCIA * * * * $0") | crontab -
 
