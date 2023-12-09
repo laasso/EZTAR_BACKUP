@@ -3,13 +3,13 @@
 # VARIABLES
 
 # Directorio donde se guardarán los backups localmente
-BACKUP_DIR="/home/alumne_2n/backups"
+BACKUP_DIR="/home/lasso/backups"
 # Carpeta que se respaldará
 SOURCE="$HOME/directori"
 # Usuario remoto
 REMOTE_USER=iker
 # IP del servidor remoto
-REMOTE_IP=192.168.1.82
+REMOTE_IP=192.168.1.138
 # Directorio remoto
 REMOTE_DIR=/home/iker/backups
 # Crear un identificador único para el backup basado en la fecha y hora
