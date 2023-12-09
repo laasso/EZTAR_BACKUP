@@ -1,5 +1,21 @@
 #!/bin/bash
 
+# Función para obtener información de forma interactiva
+get_info() {
+    local prompt="$1"
+    local default="$2"
+    local result
+
+    result=$(zenity --entry --title="Configuración del respaldo" --text="$prompt" --entry-text="$default" 2>/dev/null)
+
+    if [ $? -ne 0 ]; then
+        # Si el usuario cancela, salimos del script
+        exit 1
+    fi
+
+    echo "$result"
+}
+
 # Carpeta que se respaldará
 SOURCE=$(zenity --file-selection --directory --title="Configuración del respaldo" --text="Selecciona la carpeta a respaldar:")
 
@@ -9,27 +25,17 @@ if [ ! -d "$SOURCE" ]; then
     exit 1
 fi
 
-# Usuario remoto
-REMOTE_USER=$(zenity --entry --title="Configuración del respaldo" --text="Introduce el nombre de usuario remoto:")
-
-# IP del servidor remoto
-REMOTE_IP=$(zenity --entry --title="Configuración del respaldo" --text="Introduce la IP del servidor remoto:")
-
-# Directorio remoto
-REMOTE_DIR=$(zenity --entry --title="Configuración del respaldo" --text="Introduce el directorio remoto donde se almacenará el respaldo:")
-
-# Crear un identificador único para el backup basado en la fecha y hora
+# Resto de la configuración
+REMOTE_USER=$(get_info "Introduce el nombre de usuario remoto:" "")
+REMOTE_IP=$(get_info "Introduce la IP del servidor remoto:" "")
+REMOTE_DIR=$(get_info "Introduce el directorio remoto donde se almacenará el respaldo:" "")
 DATE=$(date +%Y-%m-%d-%H%M%S)
-
-# Nombre del archivo de backup
 BACKUP_NAME="$DATE.tar.gz"
-
-# Archivo de snapshot para backups incrementales
 LOCAL_SNAPSHOT_FILE="$HOME/snapshot.snar"
 REMOTE_SNAPSHOT_FILE="$REMOTE_DIR/snapshot.snar"
 
 # Solicitar la frecuencia del respaldo
-FRECUENCIA=$(zenity --entry --title="Configuración del respaldo" --text="Introduce cada cuánto tiempo quieres hacer el respaldo (en minutos):")
+FRECUENCIA=$(get_info "Introduce cada cuánto tiempo quieres hacer el respaldo (en minutos):" "")
 
 # Verificar que la frecuencia sea un número entero
 if ! [[ "$FRECUENCIA" =~ ^[0-9]+$ ]]; then
@@ -37,15 +43,8 @@ if ! [[ "$FRECUENCIA" =~ ^[0-9]+$ ]]; then
     exit 1
 fi
 
-# Guardar la información en un archivo de configuración
-echo "SOURCE=$SOURCE" > configuracion_backup.txt
-echo "REMOTE_USER=$REMOTE_USER" >> configuracion_backup.txt
-echo "REMOTE_IP=$REMOTE_IP" >> configuracion_backup.txt
-echo "REMOTE_DIR=$REMOTE_DIR" >> configuracion_backup.txt
-echo "BACKUP_NAME=$BACKUP_NAME" >> configuracion_backup.txt
-echo "LOCAL_SNAPSHOT_FILE=$LOCAL_SNAPSHOT_FILE" >> configuracion_backup.txt
-echo "REMOTE_SNAPSHOT_FILE=$REMOTE_SNAPSHOT_FILE" >> configuracion_backup.txt
-echo "FRECUENCIA=$FRECUENCIA" >> configuracion_backup.txt
+# Eliminar todas las entradas existentes en el crontab
+crontab -r
 
 # Programar el respaldo usando cron
 (crontab -l ; echo "*/$FRECUENCIA * * * * $PWD/ejecutar_backup.sh") | crontab -
