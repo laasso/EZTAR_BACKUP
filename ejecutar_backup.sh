@@ -1,8 +1,10 @@
 #!/bin/bash
+ 
+cd /media/lasso/6CD0FC5CD0FC2E48/coding/script_backup_FM
 
 # Verificar si existe el archivo de configuración
 if [ ! -e "configuracion_backup.txt" ]; then
-    zenity --error --title="Error" --text="El archivo de configuración no existe. Ejecuta configurar_backup.sh primero."
+    echo "Error: El archivo de configuración no existe. Ejecuta configurar_backup.sh primero." >&2
     exit 1
 fi
 
@@ -30,8 +32,7 @@ backup() {
 }
 
 # Cambiar al directorio de respaldos
-cd "$BACKUP_DIR" || exit 1
+cd "$BACKUP_DIR" || { echo "Error: No se puede cambiar al directorio de respaldos."; exit 1; }
 
 # Realizar el respaldo
 backup
-

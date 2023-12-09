@@ -47,7 +47,7 @@ fi
 crontab -r
 
 # Programar el respaldo usando cron
-(crontab -l ; echo "*/$FRECUENCIA * * * * $PWD/ejecutar_backup.sh") | crontab -
+(crontab -l ; echo "*/$FRECUENCIA * * * * $PWD/ejecutar_backup.sh >> /home/lasso/log.txt 2>&1") | crontab -
 
 # Ejecutar el script de respaldo inmediatamente
 bash $PWD/ejecutar_backup.sh
