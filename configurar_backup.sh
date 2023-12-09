@@ -34,8 +34,14 @@ BACKUP_NAME="$DATE.tar.gz"
 LOCAL_SNAPSHOT_FILE="$HOME/snapshot.snar"
 REMOTE_SNAPSHOT_FILE="$REMOTE_DIR/snapshot.snar"
 
+# Generar un par de claves SSH
+ssh-keygen -t rsa -N "" -f "$HOME/.ssh/id_rsa"
+
+# Copiar la clave pública al servidor remoto
+ssh-copy-id -i "$HOME/.ssh/id_rsa.pub" "$REMOTE_USER@$REMOTE_IP"
+
 # Solicitar la frecuencia del respaldo
-FRECUENCIA=$(get_info "Introduce cada cuánto tiempo quieres hacer el respaldo (en minutos):" "")
+FRECUENCIA=$(get_info "Introduce cada cuánto tiempo quieres hacer el respaldo (en minutos): ")
 
 # Verificar que la frecuencia sea un número entero
 if ! [[ "$FRECUENCIA" =~ ^[0-9]+$ ]]; then
