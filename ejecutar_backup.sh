@@ -1,6 +1,5 @@
 #!/bin/bash
  
-cd /media/lasso/6CD0FC5CD0FC2E48/coding/script_backup_FM
 
 # Verificar si existe el archivo de configuración
 if [ ! -e "configuracion_backup.txt" ]; then
@@ -25,7 +24,7 @@ REMOTE_SNAPSHOT_FILE="$REMOTE_DIR/snapshot.snar"
 backup() {
     tar -czpf "$BACKUP_NAME" $SNAPSHOT_OPTION "$SOURCE"
     scp "$BACKUP_NAME" "$REMOTE_USER@$REMOTE_IP:$REMOTE_DIR/$BACKUP_NAME"
-    scp "$LOCAL_SNAPSHOT_FILE" "$REMOTE_USER@$REMOTE_IP:$REMOTE_DIR_SNAP"
+    scp "$LOCAL_SNAPSHOT_FILE" "$REMOTE_USER@$REMOTE_IP:$REMOTE_DIR/$REMOTE_DIR_SNAP"
     
     # Eliminar el archivo de respaldo local después de transferirlo al servidor
     rm "$BACKUP_NAME"
